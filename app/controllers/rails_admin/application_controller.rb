@@ -16,10 +16,15 @@ module RailsAdmin
     before_action :_authenticate!
     before_action :_authorize!
     before_action :_audit!
+    before_action :set_locale
 
     helper_method :_current_user, :_get_plugin_name
 
     attr_reader :object, :model_config, :abstract_model, :authorization_adapter
+
+    def set_locale
+      I18n.locale = :en
+    end
 
     def get_model
       @model_name = to_model_name(params[:model_name])
@@ -40,7 +45,7 @@ module RailsAdmin
       instance_eval(&RailsAdmin::Config.current_user_method)
     end
 
-  private
+    private
 
     def _get_plugin_name
       @plugin_name_array ||= [RailsAdmin.config.main_app_name.is_a?(Proc) ? instance_eval(&RailsAdmin.config.main_app_name) : RailsAdmin.config.main_app_name].flatten
